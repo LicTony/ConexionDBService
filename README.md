@@ -37,3 +37,49 @@ Clonar el repositorio:
 
 ```bash
 git clone https://github.com/LicTony/ConexionDBService.git
+
+
+
+Agregar la clase a tu proyecto .NET:
+
+services.AddScoped<IDbService, DbService>();
+
+Ejemplo de uso
+```csharp
+public class MiServicio
+{
+    private readonly IDbService _db;
+
+    public MiServicio(IDbService db)
+    {
+        _db = db;
+    }
+
+    public async Task<DataTable> ObtenerDatosAsync()
+    {
+        await _db.ConectarAsync();
+
+        var datos = await _db.ExecuteQueryAsync(
+            "SELECT * FROM Productos WHERE Activo = @Activo",
+            new Dictionary<string, object?> { ["@Activo"] = true });
+
+        await _db.CerrarAsync();
+        return datos;
+    }
+}
+
+Licencia
+
+MIT
+
+Contribuciones
+
+¡Son bienvenidas! Abrí un issue o hacé un pull request si querés mejorar el proyecto.
+
+Autor
+
+## Autor
+
+[LicTony en GitHub](https://github.com/LicTony)
+
+
