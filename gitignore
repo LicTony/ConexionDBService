@@ -1,0 +1,65 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.VC.opendb
+
+## VS2022 generated files
+.vscode/
+.vs/
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+project.lock.json
+project.fragment.lock.json
+*.dgspec.json
+*.deps.json
+
+## Test results
+TestResults/
+*.TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.log
+
+## BenchmarkDotNet artifacts
+BenchmarkDotNet.Artifacts/
+
+## Resharper
+_ReSharper*/
+*.DotSettings.user
+
+## Windows Form designer
+*.resx
+*.Designer.cs
+
+## User-specific files
+*.user
+*.tss
+
+## Others
+*.dbmdl
+*.bak
+*.sql
+*.mdf
+*.ldf
+*.sdf
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Ignore local config
+appsettings.*.json
+secrets.json
