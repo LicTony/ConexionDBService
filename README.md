@@ -49,6 +49,7 @@ services.AddScoped<IDbService, DbService>();
 
 Ejemplo de uso
 
+```csharp
 public class MiServicio
 {
     private readonly IDbService _db;
@@ -70,6 +71,7 @@ public class MiServicio
         return datos;
     }
 }
+```csharp
 
 Licencia
 
