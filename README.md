@@ -65,7 +65,7 @@ public class MiServicio
         var datos = await _db.ExecuteQueryAsync(
             "SELECT * FROM Productos WHERE Activo = @Activo",
             new Dictionary<string, object?> { ["@Activo"] = true });
-
+        
         await _db.CerrarAsync();
         return datos;
     }
