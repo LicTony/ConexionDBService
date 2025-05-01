@@ -41,7 +41,7 @@ Instalación
 
 Clonar el repositorio:
 
-git clone https://github.com/tuusuario/ConexionDBService.git
+git clone https://github.com/LicTony/ConexionDBService.git
 
 Agregar la clase a tu proyecto .NET:
 
