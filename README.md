@@ -64,6 +64,20 @@ public class MiServicio
 }
 ```
 
+
+### Mecanismo de reintentos
+
+La clase `DbService` implementa lógica de reintentos basada en `SqlRetryLogicOption` para operaciones con SQL Server. Actualmente, utiliza la siguiente configuración predeterminada:
+
+- **NumberOfTries:** 5 intentos
+- **DeltaTime:** 1 segundo
+- **MaxTimeInterval:** 5 segundos
+
+Este mecanismo introduce un retraso incremental y aleatorio entre reintentos, lo que permite una mayor resiliencia frente a errores transitorios en la conexión o ejecución de comandos SQL.
+
+🔜 En versiones futuras, estos parámetros serán completamente configurables a través de opciones externas para una mayor flexibilidad.
+
+
 ## Licencia
 
 MIT
