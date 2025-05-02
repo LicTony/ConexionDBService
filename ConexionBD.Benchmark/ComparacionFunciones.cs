@@ -50,7 +50,11 @@ namespace ConexionBD.Benchmark
                            Conexion!.TrustServerCertificate
             );
 
-            _dbService = new DbService(_connectionStringValida);
+            _dbService = new DbService(_connectionStringValida , new RetryOptions() { 
+                NumberOfTries = Conexion!.NumberOfTries,
+                DeltaTime = Conexion!.DeltaTime,
+                MaxTimeInterval = Conexion!.MaxTimeInterval,
+            });
             
 
             sql = "SELECT top 1000  Id, Detalle, Fecha FROM dbo.Logs (nolock)  order by Id desc";
@@ -71,7 +75,7 @@ namespace ConexionBD.Benchmark
                 string? detalle = fila["Detalle"] as string;
                 DateTime fecha = Convert.ToDateTime(fila["Fecha"]);
                 lista.Add(new Prueba { Id = id, Detalle = detalle, Fecha = fecha });
-                //Console.WriteLine($"Id: {id}, Detalle: {detalle}, Fecha: {fecha}");
+                
             }
             await _dbService.CerrarAsync();
         }
@@ -99,7 +103,7 @@ namespace ConexionBD.Benchmark
                 DateTime fecha = Sqlv1.ReadNotNull<DateTime>(fila, fechaIndex);
                 lista.Add(new Prueba { Id = id, Detalle = detalle, Fecha = fecha });
 
-                //Console.WriteLine($"Id: {id}, Detalle: {detalle}, Fecha: {fecha}");
+                
             }
             await _dbService.CerrarAsync();
 
@@ -120,7 +124,6 @@ namespace ConexionBD.Benchmark
                 DateTime fecha = Sql.ReadNotNullDateTime(fila, "Fecha");
                 lista.Add(new Prueba { Id = id, Detalle = detalle, Fecha = fecha });
 
-                //Console.WriteLine($"Id: {id}, Detalle: {detalle}, Fecha: {fecha}");
             }
             await _dbService.CerrarAsync();
         }
@@ -144,7 +147,7 @@ namespace ConexionBD.Benchmark
                 DateTime fecha = reader.GetDateTime(ordinal);
                 lista.Add(new Prueba { Id = id, Detalle = detalle, Fecha = fecha });
 
-                //Console.WriteLine($"Id: {id}, Detalle: {detalle}, Fecha: {fecha}");
+                
             }
             await _dbService.CerrarAsync();
         }
@@ -165,7 +168,6 @@ namespace ConexionBD.Benchmark
                 DateTime fecha = Sqlv0.ReadNotNull<DateTime>(reader, "Fecha");
                 lista.Add(new Prueba { Id = id, Detalle = detalle, Fecha = fecha });
 
-                //Console.WriteLine($"Id: {id}, Detalle: {detalle}, Fecha: {fecha}");
             }
             await _dbService.CerrarAsync();
         }
@@ -191,7 +193,6 @@ namespace ConexionBD.Benchmark
                 DateTime fecha = Sqlv1.ReadNotNull<DateTime>(reader, fechaIndex);
                 lista.Add(new Prueba { Id = id, Detalle = detalle, Fecha = fecha });
 
-                //Console.WriteLine($"Id: {id}, Detalle: {detalle}, Fecha: {fecha}");
             }
             await _dbService.CerrarAsync();
         }
@@ -211,7 +212,6 @@ namespace ConexionBD.Benchmark
                 DateTime fecha = Sql.ReadNotNullDateTime(reader, "Fecha");
                 lista.Add(new Prueba { Id = id, Detalle = detalle, Fecha = fecha });
 
-                //Console.WriteLine($"Id: {id}, Detalle: {detalle}, Fecha: {fecha}");
             }
             await _dbService.CerrarAsync();
         }

@@ -2,7 +2,6 @@
 using ConexionDBService.ClasesTecnicas;
 using ConexionDBService.Services;
 using ConexionDBWinFormTest;
-using ConexionDBWinFormTest.ClasesTecnicas;
 using ConexionDBWinFormTest.Configuracion;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -33,9 +32,13 @@ namespace ConexionDBTest
                  );
 
 
+            _dbService = new DbService(_connectionString, new RetryOptions()
+            {
+                NumberOfTries = conexion!.NumberOfTries,
+                DeltaTime = conexion!.DeltaTime,
+                MaxTimeInterval = conexion!.MaxTimeInterval,
+            });
 
-
-            _dbService = new DbService(_connectionString);
 
         }
 

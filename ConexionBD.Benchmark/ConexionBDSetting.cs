@@ -14,5 +14,9 @@ namespace ConexionBD.Benchmark
         public string Password { get; set; } = string.Empty;
         public bool TrustedConnection { get; set; }
         public bool TrustServerCertificate { get; set; }
+        public int NumberOfTries { get; set; }
+        public int DeltaTime { get; set; }
+        public int MaxTimeInterval { get; set; }
+
     }
 }

@@ -12,6 +12,24 @@ namespace ConexionDBService.ClasesTecnicas
 
     }
 
+    public class RetryOptions 
+    {
+        /// <summary>
+        /// Number of tries to connect to the database.
+        /// </summary>
+        public int NumberOfTries { get; set; }
+
+        /// <summary>
+        /// Time interval between each try in seconds.
+        /// </summary>
+        public int DeltaTime { get; set; }
+
+        /// <summary>
+        /// Maximum time interval between each try in seconds.
+        /// </summary>
+        public int MaxTimeInterval { get; set; }
+    }
+
 
     public class ConexionDB : IAsyncDisposable
     {
@@ -27,18 +45,18 @@ namespace ConexionDBService.ClasesTecnicas
             cnnAux = null;
         }
 
-        public async Task<bool> ConectarAsync(string connectionString)
+        public async Task<bool> ConectarAsync(string connectionString , RetryOptions retryOptions)
         {
             try
             {
-                var retryOptions = new SqlRetryLogicOption
+                var retryOptionsAux = new SqlRetryLogicOption
                 {
-                    NumberOfTries = 5,
-                    DeltaTime = TimeSpan.FromSeconds(1),
-                    MaxTimeInterval = TimeSpan.FromSeconds(5)
+                    NumberOfTries = retryOptions.NumberOfTries,
+                    DeltaTime = TimeSpan.FromSeconds(retryOptions.DeltaTime),
+                    MaxTimeInterval = TimeSpan.FromSeconds(retryOptions.MaxTimeInterval)
                 };
 
-                var retryProvider = SqlConfigurableRetryFactory.CreateFixedRetryProvider(retryOptions);
+                var retryProvider = SqlConfigurableRetryFactory.CreateFixedRetryProvider(retryOptionsAux);
 
                 cnnAux = new SqlConnection(connectionString)
                 {

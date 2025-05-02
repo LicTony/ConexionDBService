@@ -11,6 +11,7 @@ namespace ConexionDB.Tests
     {
         readonly string _connectionStringValida;
         readonly string _connectionStringInvalida;
+        readonly RetryOptions _retryOptions;
 
 
         public DbServiceTests()
@@ -38,6 +39,15 @@ namespace ConexionDB.Tests
                      true
                  );
 
+
+            _retryOptions = new RetryOptions()
+            {
+                NumberOfTries = configuracion!.NumberOfTries,
+                DeltaTime = configuracion!.DeltaTime,
+                MaxTimeInterval = configuracion!.MaxTimeInterval,
+            };
+
+
         }
 
 
@@ -46,7 +56,7 @@ namespace ConexionDB.Tests
         {
 
             // Arrange
-            var dbService = new DbService(_connectionStringValida);
+            var dbService = new DbService(_connectionStringValida, _retryOptions);
 
             // Act
             var resultado = await dbService.ConectarAsync();
@@ -60,7 +70,7 @@ namespace ConexionDB.Tests
         {
 
             // Arrange
-            var dbService = new DbService(_connectionStringInvalida);
+            var dbService = new DbService(_connectionStringInvalida, _retryOptions);
 
             // Act
             var resultado = await dbService.ConectarAsync();
@@ -74,7 +84,7 @@ namespace ConexionDB.Tests
         public async Task CerrarAsync_DeberiaCerrarLaConexion_CuandoEstaAbierta()
         {
             // Arrange
-            var dbService = new DbService(_connectionStringValida);
+            var dbService = new DbService(_connectionStringValida, _retryOptions);
             await dbService.ConectarAsync();
 
             // Act
@@ -88,7 +98,7 @@ namespace ConexionDB.Tests
         public async Task ExecuteNonQueryAsync_DeberiaInsertarLogCorrectamente()
         {
             // Arrange
-            var dbService = new DbService(_connectionStringValida);
+            var dbService = new DbService(_connectionStringValida, _retryOptions);
             await dbService.ConectarAsync();
 
             string sql = "INSERT INTO Logs (Detalle, Fecha) VALUES (@detalle, @fecha)";
@@ -111,7 +121,7 @@ namespace ConexionDB.Tests
         public async Task ExecuteNonQueryAsyncMasivo_DeberiaInsertarLogCorrectamente()
         {
             // Arrange
-            var dbService = new DbService(_connectionStringValida);
+            var dbService = new DbService(_connectionStringValida, _retryOptions);
             await dbService.ConectarAsync();
 
             string sql = "INSERT INTO Logs (Detalle, Fecha) VALUES (@detalle, @fecha)";
@@ -138,7 +148,7 @@ namespace ConexionDB.Tests
         public async Task ExecuteScalarAsync_DeberiaDevolverCantidadDeLogs()
         {
             // Arrange
-            var dbService = new DbService(_connectionStringValida);
+            var dbService = new DbService(_connectionStringValida, _retryOptions);
             await dbService.ConectarAsync();
 
             string sql = "SELECT COUNT(*) FROM Logs";
@@ -154,7 +164,7 @@ namespace ConexionDB.Tests
         public async Task ExecuteReaderAsync_DeberiaDevolverLogs()
         {
             // Arrange
-            var dbService = new DbService(_connectionStringValida);
+            var dbService = new DbService(_connectionStringValida,_retryOptions);
             await dbService.ConectarAsync();
 
             string sql = "SELECT TOP 5 * FROM Logs";
@@ -171,7 +181,7 @@ namespace ConexionDB.Tests
         public async Task BeginCommitTransaction_DeberiaFuncionarCorrectamente()
         {
             // Arrange
-            var dbService = new DbService(_connectionStringValida);
+            var dbService = new DbService(_connectionStringValida, _retryOptions);
             await dbService.ConectarAsync();
 
             // Act
@@ -188,7 +198,7 @@ namespace ConexionDB.Tests
         {
             // Arrange
             var mockLogger = new Mock<ILogger<DbService>>();
-            var dbService = new DbService(_connectionStringValida, mockLogger.Object);
+            var dbService = new DbService(_connectionStringValida, _retryOptions, mockLogger.Object);
 
             // Act
             var resultado = await dbService.ConectarAsync();
@@ -215,7 +225,7 @@ namespace ConexionDB.Tests
         public async Task ExecuteReaderAsync_DataTable_TopLog_SinHelper()
         {
 
-            var _dbService = new DbService(_connectionStringValida);
+            var _dbService = new DbService(_connectionStringValida, _retryOptions);
             await _dbService.ConectarAsync();
 
             string sql = "SELECT  * FROM dbo.Logs (nolock)  order by Id desc";
@@ -238,7 +248,7 @@ namespace ConexionDB.Tests
         [Fact]
         public async Task ExecuteReaderAsync_DataTable_TopLog_con_SQL_Helper_V1()
         {
-            var _dbService = new DbService(_connectionStringValida);
+            var _dbService = new DbService(_connectionStringValida, _retryOptions);
             await _dbService.ConectarAsync();
 
             string sql = "SELECT  * FROM dbo.Logs (nolock)  order by Id desc";
@@ -265,7 +275,7 @@ namespace ConexionDB.Tests
         [Fact]
         public async Task ExecuteReaderAsync_DataTable_TopLog_con_SQL_Helper()
         {
-            var _dbService = new DbService(_connectionStringValida);
+            var _dbService = new DbService(_connectionStringValida, _retryOptions);
             await _dbService.ConectarAsync();
 
             string sql = "SELECT  * FROM dbo.Logs (nolock)  order by Id desc";
@@ -290,7 +300,7 @@ namespace ConexionDB.Tests
         public async Task ExecuteReaderAsync_SQLDataReader_TopLog_SinHelper()
         {
 
-            var _dbService = new DbService(_connectionStringValida);
+            var _dbService = new DbService(_connectionStringValida, _retryOptions);
             await _dbService.ConectarAsync();
 
             string sql = "SELECT  * FROM dbo.Logs (nolock)  order by Id desc";
@@ -313,7 +323,7 @@ namespace ConexionDB.Tests
         [Fact]
         public async Task ExecuteReaderAsync_SQLDataReader_TopLog_con_SQL_Helper_V0()
         {
-            var _dbService = new DbService(_connectionStringValida);
+            var _dbService = new DbService(_connectionStringValida, _retryOptions);
             await _dbService.ConectarAsync();
 
             string sql = "SELECT  * FROM dbo.Logs (nolock) order by Id desc";
@@ -337,7 +347,7 @@ namespace ConexionDB.Tests
         [Fact]
         public async Task ExecuteReaderAsync_SQLDataReader_TopLog_con_SQL_Helper_V1()
         {
-            var _dbService = new DbService(_connectionStringValida);
+            var _dbService = new DbService(_connectionStringValida, _retryOptions);
             await _dbService.ConectarAsync();
 
             string sql = "SELECT  * FROM dbo.Logs (nolock)  order by Id desc";
@@ -364,7 +374,7 @@ namespace ConexionDB.Tests
         [Fact]
         public async Task ExecuteReaderAsync_SQLDataReader_TopLog_con_SQL_Helper()
         {
-            var _dbService = new DbService(_connectionStringValida);
+            var _dbService = new DbService(_connectionStringValida, _retryOptions);
             await _dbService.ConectarAsync();
 
             string sql = "SELECT  * FROM dbo.Logs (nolock)  order by Id desc";

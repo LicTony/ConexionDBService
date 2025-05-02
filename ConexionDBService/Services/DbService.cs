@@ -1,12 +1,10 @@
-﻿using ConexionDBService.ClasesTecnicas;
+﻿using Azure.Core;
+using ConexionDBService.ClasesTecnicas;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RetryOptions = ConexionDBService.ClasesTecnicas.RetryOptions;
+
 
 namespace ConexionDBService.Services
 {
@@ -29,15 +27,17 @@ namespace ConexionDBService.Services
     public class DbService : IDbService
     {
         private readonly string _connectionString;
+        private readonly RetryOptions _retryOptions;
         private readonly ILogger<DbService>? _logger;
         private ConexionDB? _conexion;
         private SqlTransaction? _transaction;
 
         private bool _disposed = false;
 
-        public DbService(string connectionString, ILogger<DbService>? logger = null)
+        public DbService(string connectionString, RetryOptions retryOptions, ILogger<DbService>? logger = null)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            _retryOptions = retryOptions;
             _logger = logger;
         }
 
@@ -46,7 +46,7 @@ namespace ConexionDBService.Services
             try
             {
                 _conexion = new ConexionDB();
-                return await _conexion.ConectarAsync(_connectionString);
+                return await _conexion.ConectarAsync(_connectionString, _retryOptions);
             }
             catch (Exception ex)
             {
